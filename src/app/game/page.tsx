@@ -1,26 +1,19 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useGameStore } from "./hooks/useGameStore";
 import ThreeScene from "./components/ThreeScene";
 import GameUI from "./components/GameUI";
-import { useGameStore } from "./hooks/useGameStore";
 
 export default function GamePage() {
-	const {
-		resources,
-		terraforming,
-		loadGameState,
-		saveGameState,
-		updateResource,
-		updateTerraforming,
-	} = useGameStore();
+	const { loadGameState, saveGameState, runSimulation } = useGameStore();
 
-	// On mount, load existing game state from localStorage
+	// Load saved data on mount
 	useEffect(() => {
 		loadGameState();
 	}, [loadGameState]);
 
-	// Example: Auto-save the game state every 10 seconds
+	// Auto-save every 10s
 	useEffect(() => {
 		const interval = setInterval(() => {
 			saveGameState();
@@ -28,18 +21,25 @@ export default function GamePage() {
 
 		return () => {
 			clearInterval(interval);
-			// Save one last time on cleanup
 			saveGameState();
 		};
 	}, [saveGameState]);
 
+	// Run simulation periodically (e.g., every 3s)
+	useEffect(() => {
+		const interval = setInterval(() => {
+			runSimulation();
+		}, 3000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [runSimulation]);
+
 	return (
 		<main className="relative w-full h-screen overflow-hidden">
-			{/* 3D Scene */}
-			<ThreeScene resources={resources} terraforming={terraforming} />
-
-			{/* Overlay UI / HUD */}
-			<div className="absolute top-0 left-0 right-0 p-4">
+			<ThreeScene />
+			<div className="absolute top-4 right-4 pointer-events-none">
 				<GameUI />
 			</div>
 		</main>

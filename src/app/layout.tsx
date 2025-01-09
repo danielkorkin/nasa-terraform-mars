@@ -4,7 +4,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
 	title: "Terraform Mars Simulator",
-	description: "Manage resources and terraform Mars into a habitable planet.",
+	description:
+		"Brush-based terraforming with houses, greenhouses, and dynamic atmosphere.",
 };
 
 export default function RootLayout({
